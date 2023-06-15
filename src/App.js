@@ -27,14 +27,15 @@ function App() {
         theme="colored"
       />
       <Routes>
-        <Route element={<ProtectedRoute />}>
+        <Route element={<Home />} path="/home" />
+        {/* <Route element={<ProtectedRoute />}>
           <Route element={<Home />} path="/" exact />
           <Route element={<Home />} path="/home" />
         </Route>
         <Route element={<Signin />} path="/" />
         <Route element={<Signin />} path="/login" />
         <Route element={<Signin />} path="/*" />
-        <Route element={<Verification />} path="/Verification" />
+        <Route element={<Verification />} path="/Verification" /> */}
       </Routes>
     </AuthContextProvider>
   );

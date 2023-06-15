@@ -1,153 +1,95 @@
 import { useState, useContext } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { Box, Typography, Grid, Card } from "@mui/material";
-import LoadingButton from "@mui/lab/LoadingButton";
-import LoginIcon from "@mui/icons-material/Login";
-import bgImage from "../../../assets/images/custom/newBg2.jpg";
-import cardImg from "../../../assets/images/custom/newBg3.jpg";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
-import logo from "../../../assets/images/logo2.png";
-import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AuthContext from "../../../context/AuthContext";
-
+import React from "react";
+import {
+  MDBContainer,
+  MDBCol,
+  MDBRow,
+  MDBBtn,
+  MDBIcon,
+  MDBInput,
+  MDBCheckbox,
+} from "mdb-react-ui-kit";
+import logoImg from "../../../assets/images/login/icon.png";
 function SignIn(props) {
   let navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState("");
-  const { isLoggedIn, user } = useSelector((state) => state.auth);
-
   const { handleLogin } = useContext(AuthContext);
 
-  const dispatch = useDispatch();
-  const validate = () => {
-    let isValid = true;
-    if (14 < phoneNumber.length || 10 > phoneNumber.length) {
-      isValid = false;
-    }
+  const onPhoneNumberChanged = (value) => {
+    const sanitizedPhone = value.replace(/[\s-]+/g, "");
 
-    return isValid;
+    setPhoneNumber(sanitizedPhone);
   };
 
-  const handleButtonClick = (e) => {
-    if (!loading || validate()) {
-      setLoading(true);
+  const isValidPhoneNumber = (value) => {
+    const sanitizedPhone = value.replace(/[\s-]+/g, "");
+
+    if (sanitizedPhone.length === 0) {
+      console.log("Invalid phone number");
+      return false;
+    }
+
+    return true;
+  };
+
+  const handleButtonClick = (value) => {
+    if (isValidPhoneNumber(phoneNumber)) {
       handleLogin(phoneNumber.substring(2));
-      setLoading(false);
+    } else {
+      console.log("number error");
     }
-  };
-
-  const onPhoneNumberChanged = (e) => {
-    setPhoneNumber(e.phone);
   };
 
   return (
-    <Box
-      position="absolute"
-      width="100%"
-      minHeight="100vh"
-      display="flex"
-      justifyContent="center"
-      alignItems="center"
-      sx={{
-        overflowX: "hidden",
-        backgroundImage: `url(${bgImage})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
-      }}
-    >
-      <Box px={1} width="100%" height="100vh" mx="auto">
-        <Grid
-          container
-          spacing={1}
-          justifyContent="center"
-          alignItems="center"
-          height="100%"
-        >
-          <Grid item xs={11} sm={9} md={5} lg={4} xl={3}>
-            <Card
-              sx={{
-                backgroundImage: `url(${cardImg})`,
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-                boxShadow: 3,
-                position: "relative",
-                overflow: "hidden",
-              }}
-            >
-              <Box
-                variant="gradient"
-                alignItems="center"
-                sx={{
-                  backgroundColor: "#fffff",
-                  borderRadius: 5,
-                }}
-                mx={3}
-                mt={2}
-                p={2}
-                mb={1}
-                textAlign="center"
-                justifyContent="center"
-              >
-                <img src={logo} width="200" height="200" alt="logo" />
-                <Typography
-                  variant="h5"
-                  fontWeight="medium"
-                  fontFamily={"verdana"}
-                  color="#005A9C"
-                  mt={1}
-                >
-                  Sign in!
-                </Typography>
-              </Box>
-              <Box pt={2} pb={3} px={3}>
-                <div
-                  style={{
-                    textAlign: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <PhoneInput
-                    style={{
-                      margin: " 0 auto",
-                      width: " 300px",
-                    }}
-                    country={"lk"}
-                    onlyCountries={["lk"]}
-                    value={phoneNumber}
-                    placeholder={"+94 12 3456 789"}
-                    onChange={(phone) => onPhoneNumberChanged({ phone })}
-                    isValid={false}
-                  />
-                </div>
-                <Box mt={2} mb={1}>
-                  <Box
-                    sx={{
-                      display: "flex",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <LoadingButton
-                      sx={{ bgcolor: "#005A9C", borderRadius: 20 }}
-                      onClick={handleButtonClick}
-                      loading={loading}
-                      loadingPosition="start"
-                      startIcon={<LoginIcon />}
-                      variant="contained"
-                    >
-                      <span>Login</span>
-                    </LoadingButton>
-                  </Box>
-                </Box>
-              </Box>
-            </Card>
-          </Grid>
-        </Grid>
-      </Box>
-    </Box>
+    <MDBContainer className="p-3 my-5 justify-content-center align-items-center ">
+      <MDBRow>
+        <MDBCol col="10" md="6">
+          <img
+            src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.svg"
+            class="img-fluid"
+            alt="Phone image"
+          />
+        </MDBCol>
+
+        <MDBCol col="4" md="6" center>
+          <div className="text-center">
+            <img src={logoImg} style={{ width: "185px" }} alt="logo" />
+            <h4 className="mt-1 mb-5 pb-1">Attend Me Web</h4>
+          </div>
+
+          <PhoneInput
+            inputStyle={{
+              width: "100%",
+              backgroundColor: "#f8f3db",
+              height: 50,
+            }}
+            onlyCountries={["lk"]}
+            value={phoneNumber}
+            placeholder="+94 12 3456 789"
+            onChange={onPhoneNumberChanged}
+            isValid={false}
+            inputProps={{
+              maxLength: 16,
+            }}
+          />
+          <MDBBtn
+            className="mb-4 mt-4 w-100"
+            size="lg"
+            style={{ backgroundColor: "#F2B807" }}
+            onClick={handleButtonClick}
+          >
+            Sign in
+          </MDBBtn>
+        </MDBCol>
+      </MDBRow>
+    </MDBContainer>
   );
 }
 
